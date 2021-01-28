@@ -6,6 +6,10 @@ let page
 let launchParams = { headless: false }
 let cycles = 0
 
+if (process.env.EXEC_PATH) {
+  launchParams.executablePath = process.env.EXEC_PATH
+}
+
 function pageEvaluationCode(link) {
   const a = document.querySelector("a")
 

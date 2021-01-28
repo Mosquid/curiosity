@@ -1,3 +1,5 @@
+require("dotenv").config()
+
 const { topics } = require("./topics")
 const { getTopicData } = require("./source-data")
 const { visit, browser } = require("./promote")
