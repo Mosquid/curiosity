@@ -3,11 +3,17 @@ const home = "http://curiosity.ga"
 
 let browser
 let page
-let launchParams = { headless: false }
+let launchParams = { headless: true }
 let cycles = 0
 
 if (process.env.EXEC_PATH) {
   launchParams.executablePath = process.env.EXEC_PATH
+  launchParams.args = [
+    "--incognito",
+    "--no-sandbox",
+    "--disable-setuid-sandbox",
+    "--ignore-certificate-errors",
+  ]
 }
 
 function pageEvaluationCode(link) {
@@ -16,7 +22,6 @@ function pageEvaluationCode(link) {
   a.setAttribute("href", link)
   window.history.pushState("", "", "featured-from-medium")
   a.click()
-  setTimeout(() => {}, 1000)
 }
 
 module.exports.visit = async (link) => {
@@ -36,20 +41,9 @@ module.exports.visit = async (link) => {
     }
 
     page = await browser.newPage()
-    await page.setRequestInterception(true)
-
-    page.on("request", (request) => {
-      if (["image", "font"].indexOf(request.resourceType()) !== -1) {
-        request.abort()
-      } else {
-        request.continue()
-      }
-    })
 
     await page.goto(home, { waitUntil: "domcontentloaded", timeout: 35000 })
     const data = await page.evaluate(pageEvaluationCode, link)
-    await page.waitForSelector("body")
-    await page.close()
 
     return data
   } catch (error) {

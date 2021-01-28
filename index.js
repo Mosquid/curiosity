@@ -19,5 +19,3 @@ async function main() {
 }
 
 main()
-
-// const getTopicArticles =
