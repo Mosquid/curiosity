@@ -3,7 +3,7 @@ const parseString = require("xml2js").parseStringPromise
 
 module.exports.getTopicData = async (topic) => {
   try {
-    const url = `https://medium.com/feed/topic/${topic}`
+    const url = `https://medium.com/feed/tag/${topic}`
     const { data } = await axios.get(url)
     const parsed = await parseString(data)
     return getTopicStories(parsed)

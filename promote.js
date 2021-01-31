@@ -6,14 +6,16 @@ let page
 let launchParams = { headless: true }
 let cycles = 0
 
+launchParams.args = [
+  "--incognito",
+  "--no-sandbox",
+  "--disable-setuid-sandbox",
+  "--ignore-certificate-errors",
+]
+
 if (process.env.EXEC_PATH) {
   launchParams.executablePath = process.env.EXEC_PATH
-  launchParams.args = [
-    "--incognito",
-    "--no-sandbox",
-    "--disable-setuid-sandbox",
-    "--ignore-certificate-errors",
-  ]
+  
 }
 
 function pageEvaluationCode(link) {
@@ -44,6 +46,7 @@ module.exports.visit = async (link) => {
 
     await page.goto(home, { waitUntil: "domcontentloaded", timeout: 35000 })
     const data = await page.evaluate(pageEvaluationCode, link)
+    await page.waitForTimeout(2500)
 
     return data
   } catch (error) {
